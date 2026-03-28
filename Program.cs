@@ -1,20 +1,28 @@
-using Variant1;
+using Variant2;
 
-var file = new FileResource("report.txt");
-var network = new NetworkResource("api.company.local");
+// Value type demo
+Point p1 = new Point { X = 1, Y = 2 };
+Point p2 = p1;
 
-var manager = new ResourceManager<Resource>();
+p2.X = 10;
 
-manager.Add(file);
-manager.Add(network);
+Console.WriteLine("Struct test:");
+p1.Print();
+p2.Print();
+Console.WriteLine("p1 did not change because struct is copied");
+Console.WriteLine();
 
-manager.OpenAll();
+// Reference type demo
+PointRef r1 = new PointRef { X = 1, Y = 2 };
+PointRef r2 = r1;
 
-using (var tempFile = new FileResource("temp.txt"))
-{
-    tempFile.Open();
-}
+r2.X = 10;
 
-manager.CloseAll();
+Console.WriteLine("Class test:");
+r1.Print();
+r2.Print();
+Console.WriteLine("r1 changed too because class stores reference");
+Console.WriteLine();
 
-Console.WriteLine("Done.");
+// Boxing demo
+BoxingTester.Test();
