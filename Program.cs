@@ -1,20 +1,23 @@
-using Variant1;
+using Variant3;
 
-var file = new FileResource("report.txt");
-var network = new NetworkResource("api.company.local");
+var container = new DataContainer<DataItem>();
 
-var manager = new ResourceManager<Resource>();
-
-manager.Add(file);
-manager.Add(network);
-
-manager.OpenAll();
-
-using (var tempFile = new FileResource("temp.txt"))
+for (int i = 0; i < 10000; i++)
 {
-    tempFile.Open();
+    var item = new DataItem
+    {
+        Id = $"item-{i}",
+        Payload = new byte[1024]
+    };
+
+    container.AddItem(item);
 }
 
-manager.CloseAll();
+Console.WriteLine($"Total size before GC: {container.GetTotalSize()} bytes");
 
-Console.WriteLine("Done.");
+GC.Collect();
+GC.WaitForPendingFinalizers();
+
+Console.WriteLine("GC.Collect() was called.");
+Console.WriteLine($"Total size after GC: {container.GetTotalSize()} bytes");
+Console.WriteLine("Objects are still in container, so total size is the same.");
